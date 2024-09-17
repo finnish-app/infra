@@ -1,0 +1,13 @@
+target/
+*.env
+.env
+test.env
+
+# ignore pre-commit
+pre-commit-*
+
+# ignore direnv
+.envrc
+.direnv/
+
+secret*

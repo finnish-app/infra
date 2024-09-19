@@ -5,12 +5,14 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     rust-overlay.url = "github:oxalica/rust-overlay";
     flake-utils.url = "github:numtide/flake-utils";
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs = {
     nixpkgs,
     rust-overlay,
     flake-utils,
+    agenix,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (
@@ -40,13 +42,23 @@
         with pkgs; {
           devShells.default = mkShell {
             buildInputs = [
+              agenix.packages.${system}.default
               beyla
               rust
             ];
 
             shellHook = ''
+              # https://grafana.com/orgs/onic/stacks/1039590/otlp-info
+              # https://grafana.com/docs/beyla/latest/tutorial/getting-started/
+              export BEYLA_OPEN_PORT=8080
+              export BEYLA_TRACE_PRINTER=text
+              export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
+              export OTEL_EXPORTER_OTLP_ENDPOINT="https://otlp-gateway-prod-sa-east-1.grafana.net/otlp"
+              export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Basic <TODO: add agenix or sops secrets>"
+
               # debug the beyla stuff
               # printf "Beyla: ${beyla}\n"
+              # printf ${config.age.secrets.secret1.path}
             '';
           };
         }

@@ -27,6 +27,12 @@
   zramSwap.enable = true;
   networking.hostName = "ubuntu-s-nixos-test";
   networking.domain = "";
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [80 443];
+  };
+
   services.openssh.enable = true;
   users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0V2EeJT/g1fGeolumPCyCIjpYVX5WT91H3I7HcZj8N nic@desktop''];
   system.stateVersion = "23.11";
@@ -39,5 +45,12 @@
         http_port = 3000;
       };
     };
+  };
+
+  services.caddy = {
+    enable = true;
+    virtualHosts."finnish.ovh".extraConfig = ''
+      respond "Hello, world!"
+    '';
   };
 }

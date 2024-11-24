@@ -4,11 +4,17 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     buildbot-nix.url = "github:nix-community/buildbot-nix";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     nixpkgs,
+    ...
   } @ inputs: let
     system = "x86_64-linux";
 
@@ -21,7 +27,7 @@
     };
   in {
     nixosConfigurations = {
-      ubuntu-s-nixos-test = nixpkgs.lib.nixosSystem {
+      fina = nixpkgs.lib.nixosSystem {
         inherit pkgs;
         specialArgs = {inherit inputs;};
         modules = [

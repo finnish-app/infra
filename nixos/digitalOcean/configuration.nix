@@ -7,6 +7,7 @@
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
+    inputs.home-manager.nixosModules.default
     inputs.buildbot-nix.nixosModules.buildbot-master
     inputs.buildbot-nix.nixosModules.buildbot-worker
   ];
@@ -43,11 +44,20 @@
     allowedTCPPorts = [80 443];
   };
 
+  home-manager = {
+    extraSpecialArgs = {inherit inputs;};
+    users = {
+      "root" = import /root/infra.git/main/nixos/digitalOcean/home.nix;
+    };
+    backupFileExtension = "backup";
+  };
+
+
   programs.nh = {
     enable = true;
     clean.enable = true;
     clean.extraArgs = "--keep-since 7d --keep 10";
-    flake = "/root/nixos";
+    flake = "/root/infra.git/main/nixos";
   };
 
   services.postgresql = {
@@ -111,7 +121,7 @@
     github = {
       authType.app = {
         id = 1061359;
-        secretKeyFile = /home/nic/nixos/hosts/desktop/app-secret.key;
+        secretKeyFile = /root/infra.git/main/nixos/digitalOcean/app-secret.key;
       };
 
       oauthId = "Iv23liHHz2RUuo5PHXOy";

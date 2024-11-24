@@ -1,7 +1,14 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
+    inputs.buildbot-nix.nixosModules.buildbot-master
+    inputs.buildbot-nix.nixosModules.buildbot-worker
   ];
 
   nix.settings = {
@@ -21,28 +28,34 @@
     ];
   };
 
-  environment.systemPackages = with pkgs; [neovim zellij];
+  environment.systemPackages = with pkgs; [git neovim zellij];
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
-  networking.hostName = "ubuntu-s-nixos-test";
-  networking.domain = "";
+  networking.hostName = "fina";
+  networking.domain = "finnish.ovh";
+  services.openssh.enable = true;
+  users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0V2EeJT/g1fGeolumPCyCIjpYVX5WT91H3I7HcZj8N nic@desktop''];
+  system.stateVersion = "23.11";
 
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [80 443];
   };
 
-  services.openssh.enable = true;
-  users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0V2EeJT/g1fGeolumPCyCIjpYVX5WT91H3I7HcZj8N nic@desktop''];
-  system.stateVersion = "23.11";
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 7d --keep 10";
+    flake = "/root/nixos";
+  };
 
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql;
 
     enableTCPIP = true;
-    settings.port = 6543;
+    # settings.port = 6543;
 
     # ensureDatabases = ["finapp"];
     authentication = pkgs.lib.mkOverride 10 ''
@@ -63,20 +76,59 @@
     '';
   };
 
-  services.grafana = {
-    enable = true;
-    settings = {
-      server = {
-        http_addr = "127.0.0.1";
-        http_port = 3000;
-      };
-    };
-  };
+  # services.grafana = {
+  #   enable = true;
+  #   settings = {
+  #     server = {
+  #       http_addr = "127.0.0.1";
+  #       http_port = 3000;
+  #     };
+  #   };
+  # };
 
   services.caddy = {
     enable = true;
     virtualHosts."finnish.ovh".extraConfig = ''
-      respond "Hello, world!"
+      reverse_proxy localhost:8000
     '';
+
+    virtualHosts."buildbot.finnish.ovh".extraConfig = ''
+      reverse_proxy localhost:8010
+    '';
+  };
+
+  programs.direnv.enable = true;
+
+  services.buildbot-master.buildbotUrl = lib.mkForce "https://buildbot.finnish.ovh/";
+  services.buildbot-nix.master = {
+    enable = true;
+    admins = ["nicolasauler"];
+
+    domain = "buildbot.finnish.ovh";
+
+    jobReportLimit = 2;
+
+    github = {
+      authType.app = {
+        id = 1061359;
+        secretKeyFile = /home/nic/nixos/hosts/desktop/app-secret.key;
+      };
+
+      oauthId = "Iv23liHHz2RUuo5PHXOy";
+      oauthSecretFile = pkgs.writeText "oauth-secret.key" "hey hey";
+
+      webhookSecretFile = pkgs.writeText "webhook-secret" "uau uau";
+    };
+
+    workersFile = pkgs.writeText "workers.json" ''
+      [
+        { "name": "finnish", "pass": "password", "cores": 1 }
+      ]
+    '';
+  };
+
+  services.buildbot-nix.worker = {
+    enable = true;
+    workerPasswordFile = pkgs.writeText "worker-pass" "password";
   };
 }

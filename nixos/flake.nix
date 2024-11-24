@@ -1,8 +1,9 @@
 {
-  description = "digital ocean droplet for finnish";
+  description = "digital ocean droplet for fina";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    buildbot-nix.url = "github:nix-community/buildbot-nix";
   };
 
   outputs = {
@@ -21,6 +22,7 @@
   in {
     nixosConfigurations = {
       ubuntu-s-nixos-test = nixpkgs.lib.nixosSystem {
+        inherit pkgs;
         specialArgs = {inherit inputs;};
         modules = [
           ./digitalOcean/configuration.nix

@@ -111,7 +111,7 @@
     github = {
       authType.app = {
         id = 1061359;
-        secretKeyFile = /home/nic/nixos/hosts/desktop/app-secret.key;
+        secretKeyFile = /root/infra.git/main/nixos/digitalOcean/app-secret.key;
       };
 
       oauthId = "Iv23liHHz2RUuo5PHXOy";

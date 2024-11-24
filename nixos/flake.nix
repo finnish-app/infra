@@ -9,6 +9,7 @@
   outputs = {
     self,
     nixpkgs,
+    ...
   } @ inputs: let
     system = "x86_64-linux";
 
@@ -21,7 +22,7 @@
     };
   in {
     nixosConfigurations = {
-      ubuntu-s-nixos-test = nixpkgs.lib.nixosSystem {
+      fina = nixpkgs.lib.nixosSystem {
         inherit pkgs;
         specialArgs = {inherit inputs;};
         modules = [

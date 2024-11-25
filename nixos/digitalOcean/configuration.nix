@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -52,7 +53,6 @@
     backupFileExtension = "backup";
   };
 
-
   programs.nh = {
     enable = true;
     clean.enable = true;
@@ -83,27 +83,6 @@
       CREATE ROLE finapp WITH LOGIN PASSWORD 'finapp' CREATEDB;
       CREATE DATABASE finapp;
       GRANT ALL PRIVILEGES ON DATABASE finapp TO finapp;
-    '';
-  };
-
-  # services.grafana = {
-  #   enable = true;
-  #   settings = {
-  #     server = {
-  #       http_addr = "127.0.0.1";
-  #       http_port = 3000;
-  #     };
-  #   };
-  # };
-
-  services.caddy = {
-    enable = true;
-    virtualHosts."finnish.ovh".extraConfig = ''
-      reverse_proxy localhost:8000
-    '';
-
-    virtualHosts."buildbot.finnish.ovh".extraConfig = ''
-      reverse_proxy localhost:8010
     '';
   };
 
@@ -140,5 +119,24 @@
   services.buildbot-nix.worker = {
     enable = true;
     workerPasswordFile = pkgs.writeText "worker-pass" "password";
+  };
+
+  services.caddy = {
+    enable = true;
+    virtualHosts."finnish.ovh".extraConfig = ''
+      reverse_proxy localhost:8000
+    '';
+
+    virtualHosts."buildbot.finnish.ovh".extraConfig = ''
+      reverse_proxy localhost:8080
+    '';
+  };
+
+  services.nginx = {
+    defaultHTTPListenPort = 8080;
+    # virtualHosts.${config.services.buildbot-nix.master.domain} = {
+    #   forceSSL = true;
+    #   enableACME = true;
+    # };
   };
 }

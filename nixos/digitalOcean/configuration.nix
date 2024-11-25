@@ -107,6 +107,7 @@
       oauthSecretFile = pkgs.writeText "oauth-secret.key" "hey hey";
 
       webhookSecretFile = pkgs.writeText "webhook-secret" "uau uau";
+      topic = "build-with-buildbot";
     };
 
     workersFile = pkgs.writeText "workers.json" ''

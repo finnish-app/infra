@@ -95,7 +95,7 @@
 
     domain = "buildbot.finnish.ovh";
 
-    jobReportLimit = 2;
+    jobReportLimit = 20;
 
     github = {
       authType.app = {
@@ -112,9 +112,18 @@
 
     workersFile = pkgs.writeText "workers.json" ''
       [
-        { "name": "finnish", "pass": "password", "cores": 1 }
+        { "name": "fina", "pass": "password", "cores": 4 }
       ]
     '';
+
+    cachix = {
+      enabled = true;
+      name = "fina";
+
+      # One of the following is required:
+      # auth.signingKey.file = "/var/lib/secrets/cachix-key";
+      auth.authToken.file = pkgs.writeText "cachix-token" "hi hi";
+    };
   };
 
   services.buildbot-nix.worker = {

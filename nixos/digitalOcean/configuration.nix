@@ -117,7 +117,7 @@
     '';
 
     cachix = {
-      enabled = true;
+      enable = true;
       name = "fina";
 
       # One of the following is required:

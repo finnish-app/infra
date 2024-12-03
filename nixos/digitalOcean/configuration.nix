@@ -35,7 +35,7 @@
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
   networking.hostName = "fina";
-  networking.domain = "finnish.ovh";
+  networking.domain = "fina.center";
   services.openssh.enable = true;
   users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0V2EeJT/g1fGeolumPCyCIjpYVX5WT91H3I7HcZj8N nic@desktop''];
   system.stateVersion = "23.11";
@@ -88,12 +88,12 @@
 
   programs.direnv.enable = true;
 
-  services.buildbot-master.buildbotUrl = lib.mkForce "https://buildbot.finnish.ovh/";
+  services.buildbot-master.buildbotUrl = lib.mkForce "https://buildbot.fina.center/";
   services.buildbot-nix.master = {
     enable = true;
     admins = ["nicolasauler"];
 
-    domain = "buildbot.finnish.ovh";
+    domain = "buildbot.fina.center";
 
     jobReportLimit = 20;
 
@@ -133,11 +133,11 @@
 
   services.caddy = {
     enable = true;
-    virtualHosts."finnish.ovh".extraConfig = ''
+    virtualHosts."fina.center".extraConfig = ''
       reverse_proxy localhost:8000
     '';
 
-    virtualHosts."buildbot.finnish.ovh".extraConfig = ''
+    virtualHosts."buildbot.fina.center".extraConfig = ''
       reverse_proxy localhost:8080
     '';
   };

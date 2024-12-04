@@ -1,5 +1,5 @@
 {
-  description = "Finnish Digital ocean devShell";
+  description = "Fina Digital ocean devShell";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";

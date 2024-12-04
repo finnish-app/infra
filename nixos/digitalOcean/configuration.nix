@@ -133,9 +133,12 @@
 
   services.caddy = {
     enable = true;
-    virtualHosts."fina.center".extraConfig = ''
-      reverse_proxy localhost:8000
-    '';
+    virtualHosts."fina.center" = {
+      extraConfig = ''
+        reverse_proxy localhost:8000
+      '';
+      serverAliases = ["www.fina.center"];
+    };
 
     virtualHosts."buildbot.fina.center".extraConfig = ''
       reverse_proxy localhost:8080

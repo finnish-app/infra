@@ -19,11 +19,11 @@
       system: let
         beyla = pkgs.stdenv.mkDerivation {
           pname = "grafana_beyla";
-          version = "v1.8.4-alpha";
+          version = "v1.9.0";
 
           src = pkgs.fetchzip {
-            url = "https://github.com/grafana/beyla/releases/download/v1.8.4-alpha/beyla-linux-amd64-v1.8.4-alpha.tar.gz";
-            hash = "sha256-hlXgm71bMhmP2QYBTMsU4sEQILpAxdGOJd1DUr6cdW8=";
+            url = "https://github.com/grafana/beyla/releases/download/v1.9.0/beyla-linux-amd64-v1.9.0.tar.gz";
+            hash = "sha256-LQnGhdAqE01B4rrb1AtMN9d22xdmz39hrrdFoRdWQdE=";
             stripRoot = false;
           };
 
@@ -50,15 +50,13 @@
             shellHook = ''
               # https://grafana.com/orgs/onic/stacks/1039590/otlp-info
               # https://grafana.com/docs/beyla/latest/tutorial/getting-started/
-              export BEYLA_OPEN_PORT=8080
+              export BEYLA_OPEN_PORT=8000
               export BEYLA_TRACE_PRINTER=text
-              export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
-              export OTEL_EXPORTER_OTLP_ENDPOINT="https://otlp-gateway-prod-sa-east-1.grafana.net/otlp"
-              export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Basic <TODO: add agenix or sops secrets>"
+              export OTEL_EXPORTER_OTLP_PROTOCOL="grpc"
+              export OTEL_EXPORTER_OTLP_ENDPOINT="http://127.0.0.1:4317"
+              # export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Basic <TODO: add agenix or sops secrets>"
 
               # debug the beyla stuff
-              # printf "Beyla: ${beyla}\n"
-              # printf ${config.age.secrets.secret1.path}
             '';
           };
         }

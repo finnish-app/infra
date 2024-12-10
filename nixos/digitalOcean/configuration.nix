@@ -149,6 +149,10 @@
     virtualHosts."grafana.fina.center".extraConfig = ''
       reverse_proxy 127.0.0.1:3000
     '';
+
+    virtualHosts."influx.fina.center".extraConfig = ''
+      reverse_proxy 127.0.0.1:8086
+    '';
   };
 
   services.nginx = {
@@ -245,7 +249,30 @@
             access = "proxy";
             url = "http://127.0.0.1:${toString config.services.mimir.configuration.server.http_listen_port}/prometheus";
           }
+          {
+            name = "influxdb";
+            type = "influxdb";
+            access = "proxy";
+            url = "http://127.0.0.1:8086";
+            # secureJsonData = {
+            #   token = "soon";
+            # };
+            # jsonData = {
+            #   version = "Flux";
+            #   organzation = "bamboo";
+            #   defaultBucket = "plant0";
+            #   tlsSkipVerify = true;
+            # };
+          }
         ];
+      };
+    };
+
+    influxdb2 = {
+      enable = true;
+      settings = {
+        http-bind-address = "127.0.0.1:8086";
+        log-level = "debug";
       };
     };
 

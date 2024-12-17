@@ -157,6 +157,10 @@
     virtualHosts."video.fina.center".extraConfig = ''
       redir https://youtu.be/AUdKfNFCxbs permanent
     '';
+
+    virtualHosts."model.fina.center".extraConfig = ''
+      reverse_proxy 127.0.0.1:9000
+    '';
   };
 
   services.nginx = {

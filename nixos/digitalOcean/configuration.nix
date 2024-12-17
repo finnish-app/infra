@@ -39,7 +39,10 @@
   networking.hostName = "fina";
   networking.domain = "fina.center";
   services.openssh.enable = true;
-  users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0V2EeJT/g1fGeolumPCyCIjpYVX5WT91H3I7HcZj8N nic@desktop''];
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0V2EeJT/g1fGeolumPCyCIjpYVX5WT91H3I7HcZj8N nic@desktop"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhY9j08IXIGos+epdkykKEfD6DGPe+Jl+/BurFBw4IR nic@xpsbipa"
+  ];
   system.stateVersion = "23.11";
 
   networking.firewall = {

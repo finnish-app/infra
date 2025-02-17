@@ -36,7 +36,7 @@
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
-  networking.hostName = "fina";
+  networking.hostName = "bip-droplet";
   networking.domain = "fina.center";
   services.openssh.enable = true;
   users.users.root.openssh.authorizedKeys.keys = [

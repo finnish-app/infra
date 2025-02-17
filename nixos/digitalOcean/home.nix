@@ -13,7 +13,7 @@
   programs.git = {
     enable = true;
     userName = "Nicolas Auler";
-    userEmail = "nicolasauler@usp.br";
+    userEmail = "nickvarauler@gmail.com";
 
     extraConfig = {
       commit = {

@@ -1,5 +1,5 @@
 {
-  description = "digital ocean droplet for fina";
+  description = "digital ocean droplet for bip";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -27,7 +27,7 @@
     };
   in {
     nixosConfigurations = {
-      fina = nixpkgs.lib.nixosSystem {
+      bip-droplet = nixpkgs.lib.nixosSystem {
         inherit pkgs;
         specialArgs = {inherit inputs;};
         modules = [
